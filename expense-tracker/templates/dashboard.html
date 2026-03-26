@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Spendly{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-header">
+    <div class="header-content">
+        <h1>Welcome back, <span class="highlight">{{ session.user_name }}</span>.</h1>
+        <p>Keep your finances in check and track your progress.</p>
+    </div>
+    <div class="summary-card">
+        <span class="label">Total Overall</span>
+        <span class="amount">₹{{ "%.2f"|format(total_spent) }}</span>
+    </div>
+</section>
+
+<section class="dashboard-grid">
+    <!-- Spending Breakdown Chart -->
+    <div class="grid-card chart-card">
+        <div class="card-header">
+            <h3>Spending by Category</h3>
+        </div>
+        <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Monthly Budget Status -->
+    <div class="grid-card budget-card">
+        <div class="card-header">
+            <h3>Monthly Budget Status</h3>
+            <button class="edit-budget-btn" onclick="document.getElementById('budgetModal').style.display='flex'">Adjust</button>
+        </div>
+        <div class="budget-status">
+            <div class="progress-details">
+                <span class="spent">₹{{ "%.2f"|format(current_month_spent) }} spent</span>
+                <span class="limit">of ₹{{ "%.2f"|format(monthly_budget) }}</span>
+            </div>
+            <div class="progress-bar-track">
+                {% set percent = (current_month_spent / monthly_budget * 100) if monthly_budget > 0 else 0 %}
+                <div class="progress-bar-fill {% if percent > 90 %}danger{% elif percent > 75 %}warning{% endif %}" style="width: {{ [percent, 100]|min }}%"></div>
+            </div>
+            <p class="budget-caption">
+                {% if percent >= 100 %}
+                    <span class="danger-text">You've exceeded your budget!</span>
+                {% elif percent > 80 %}
+                    <span class="warning-text">You're getting close to your limit.</span>
+                {% else %}
+                    You've used <strong>{{ percent|round|int }}%</strong> of your budget.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="expense-controls">
+    <div class="search-filter-row">
+        <form method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Search expenses..." value="{{ request.args.get('q', '') }}" class="search-input">
+            <select name="category" class="filter-select">
+                <option value="">All Categories</option>
+                <option value="Food" {% if request.args.get('category') == "Food" %}selected{% endif %}>Food</option>
+                <option value="Transport" {% if request.args.get('category') == "Transport" %}selected{% endif %}>Transport</option>
+                <option value="Shopping" {% if request.args.get('category') == "Shopping" %}selected{% endif %}>Shopping</option>
+                <option value="Rent" {% if request.args.get('category') == "Rent" %}selected{% endif %}>Rent</option>
+                <option value="Entertainment" {% if request.args.get('category') == "Entertainment" %}selected{% endif %}>Entertainment</option>
+                <option value="Other" {% if request.args.get('category') == "Other" %}selected{% endif %}>Other</option>
+            </select>
+            <button type="submit" class="btn-search">Filter</button>
+            {% if request.args.get('q') or request.args.get('category') %}
+                <a href="{{ url_for('dashboard') }}" class="btn-clear">Clear</a>
+            {% endif %}
+        </form>
+        <a href="{{ url_for('add_expense') }}" class="add-btn">+ Add Expense</a>
+    </div>
+</section>
+
+<section class="expenses-list">
+    <div class="list-container">
+        {% if expenses %}
+            <table class="expense-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td class="col-date">{{ expense.date[:10] }}</td>
+                        <td class="col-category"><span class="tag-{{ expense.category|lower }}">{{ expense.category }}</span></td>
+                        <td class="col-description">{{ expense.description or "-" }}</td>
+                        <td class="col-amount">₹{{ "%.2f"|format(expense.amount) }}</td>
+                        <td class="col-actions">
+                            <a href="{{ url_for('edit_expense', id=expense.id) }}" class="edit-btn">Edit</a>
+                            <a href="{{ url_for('delete_expense', id=expense.id) }}" class="delete-btn" onclick="return confirm('Delete this expense?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state">
+                <p>No transactions yet. Start by adding one!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Budget Adjustment Modal -->
+<div id="budgetModal" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Set Monthly Budget</h3>
+            <button onclick="document.getElementById('budgetModal').style.display='none'" class="close-btn">×</button>
+        </div>
+        <form action="{{ url_for('update_budget') }}" method="POST">
+            <div class="form-group">
+                <label for="budget">New Monthly Limit (₹)</label>
+                <input type="number" step="100" name="budget" id="budget" class="form-input" value="{{ monthly_budget }}" required>
+            </div>
+            <button type="submit" class="btn-submit">Update Budget</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    const categoryChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                data: {{ chart_values|safe }},
+                backgroundColor: [
+                    '#fee2e2', '#e0f2fe', '#fef3c7', '#ede9fe', '#fae8ff', '#f3f4f6'
+                ],
+                borderColor: [
+                    '#991b1b', '#075985', '#92400e', '#5b21b6', '#86198f', '#374151'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            },
+            cutout: '70%'
+        }
+    });
+</script>
+{% endblock %}

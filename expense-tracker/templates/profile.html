@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Profile | Spendly{% endblock %}
+
+{% block content %}
+<section class="profile-section">
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>Your Profile</h1>
+            <p>Personal details and account overview.</p>
+        </div>
+
+        <div class="profile-card">
+            <div class="detail-row">
+                <span class="label">Full Name</span>
+                <span class="value">{{ session.user_name }}</span>
+            </div>
+            <!-- Additional features could be added here (e.g. changing password or email) -->
+        </div>
+
+        <div class="profile-actions">
+            <a href="{{ url_for('logout') }}" class="btn-logout">Sign out</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
