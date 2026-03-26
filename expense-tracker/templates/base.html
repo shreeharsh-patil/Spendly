@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Spendly{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block head %}{% endblock %}
 </head>
+
 <body>
 
     <nav class="navbar">
@@ -20,12 +24,12 @@
             </a>
             <div class="nav-links">
                 {% if session.user_id %}
-                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                    <a href="{{ url_for('profile') }}">Profile</a>
-                    <a href="{{ url_for('logout') }}" class="nav-cta">Logout</a>
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('logout') }}" class="nav-cta">Logout</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}">Sign in</a>
-                    <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
+                <a href="{{ url_for('login') }}">Sign in</a>
+                <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
                 {% endif %}
             </div>
         </div>
@@ -33,11 +37,11 @@
 
     <div class="flash-messages">
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
     </div>
 
@@ -50,7 +54,7 @@
             <span class="brand-icon">◈</span>
             <span class="footer-name">Spendly</span>
             <p class="footer-copy">Track every rupee. Own your finances.</p>
-            <div class="footer-nav" style="margin-top: 0.5rem; display: flex; gap: 1.5rem; font-size: 0.75rem;">
+            <div class="footer-nav" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.75rem;">
                 <a href="{{ url_for('terms') }}" style="color: var(--ink-faint);">Terms and Conditions</a>
                 <a href="{{ url_for('privacy') }}" style="color: var(--ink-faint);">Privacy Policy</a>
             </div>
@@ -60,4 +64,5 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block scripts %}{% endblock %}
 </body>
+
 </html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spendly | The Digital Ledger</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary": "#783db1",
+              "on-secondary-fixed": "#29394e",
+              "tertiary-container": "#cd9bff",
+              "inverse-on-surface": "#9a9d9f",
+              "primary-fixed-dim": "#9cdbca",
+              "on-primary-container": "#14584b",
+              "on-secondary-container": "#3c4c61",
+              "on-surface-variant": "#595c5e",
+              "on-primary-fixed-variant": "#216254",
+              "on-secondary": "#edf3ff",
+              "surface-container-lowest": "#ffffff",
+              "surface-container": "#e5e9eb",
+              "primary": "#004D40",
+              "on-error-container": "#570008",
+              "error-container": "#fb5151",
+              "on-primary-fixed": "#004439",
+              "surface-container-high": "#dfe3e6",
+              "secondary-container": "#c8d8f3",
+              "secondary": "#4d5d73",
+              "inverse-primary": "#bdfeeb",
+              "tertiary-fixed": "#cd9bff",
+              "on-secondary-fixed-variant": "#46556b",
+              "secondary-dim": "#415166",
+              "error": "#b31b25",
+              "primary-dim": "#003d33",
+              "surface-container-highest": "#d9dde0",
+              "on-surface": "#2c2f31",
+              "on-error": "#ffefee",
+              "error-dim": "#9f0519",
+              "primary-container": "#E0F2F1",
+              "primary-fixed": "#aaead8",
+              "inverse-surface": "#0b0f10",
+              "background": "#ffffff",
+              "tertiary-fixed-dim": "#c488ff",
+              "surface-dim": "#d0d5d8",
+              "on-tertiary": "#fbefff",
+              "tertiary-dim": "#6b30a4",
+              "on-tertiary-fixed-variant": "#53108c",
+              "on-primary": "#ffffff",
+              "surface-bright": "#f5f7f9",
+              "secondary-fixed-dim": "#bacae4",
+              "surface-container-low": "#f8fafc",
+              "surface": "#ffffff",
+              "on-tertiary-container": "#490081",
+              "on-tertiary-fixed": "#270048",
+              "secondary-fixed": "#c8d8f3",
+              "on-background": "#2c2f31",
+              "outline-variant": "#e2e8f0",
+              "outline": "#94a3b8",
+              "surface-tint": "#004D40",
+              "surface-variant": "#f1f5f9"
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Manrope", "sans-serif"],
+              "label": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "8px", "lg": "12px", "xl": "16px", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-highlight {
+            position: relative;
+            z-index: 1;
+        }
+        .text-highlight::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            right: -4px;
+            bottom: 4px;
+            height: 45%;
+            background-color: #D1E9F6;
+            z-index: -1;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="bg-white text-on-surface font-body antialiased">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 w-full z-50 bg-white/80 backdrop-blur-md">
+<nav class="flex justify-between items-center w-full px-6 py-6 max-w-7xl mx-auto">
+<div class="text-2xl font-headline font-extrabold tracking-tight text-primary">Spendly</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Features</a>
+<a class="text-slate-500 font-medium hover:text-primary transition-colors" href="#">Pricing</a>
+<a class="text-slate-500 font-medium hover:text-primary transition-colors" href="#">About</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-700 font-medium hover:text-primary transition-colors">Login</button>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all active:scale-95">Sign Up</button>
+</div>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative pt-12 pb-24 px-6">
+<div class="max-w-4xl mx-auto text-center">
+<!-- Badge -->
+<div class="inline-flex items-center gap-1.5 px-4 py-1.5 mb-12 rounded-full bg-[#E6F4F1] text-[#00695C] text-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-[#00695C]"></span>
+                Free to use · No credit card needed
+            </div>
+<!-- Headline -->
+<h1 class="text-5xl md:text-[64px] font-headline font-extrabold text-on-surface leading-[1.1] tracking-tight mb-8">
+<span class="text-highlight">Track every rupee.</span><br/>
+<span class="text-highlight text-[#00796B]">Know where it goes.</span>
+</h1>
+<!-- Subheadline -->
+<p class="text-xl text-slate-500 font-medium max-w-2xl mx-auto mb-12 leading-relaxed">
+                Spendly helps you log expenses, spot patterns, and stay on budget — without the spreadsheet headache.
+            </p>
+<!-- CTA Buttons -->
+<div class="flex flex-wrap justify-center gap-4 mb-20">
+<button class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg">
+                    Create free account
+                </button>
+<button class="bg-white text-black border-2 border-slate-200 px-10 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center gap-2">
+                    See how it works
+                    <span class="material-symbols-outlined text-xl">play_circle</span>
+</button>
+</div>
+<!-- Dashboard Preview Mockup -->
+<div class="relative max-w-5xl mx-auto">
+<div class="bg-[#F8FAFC] p-4 md:p-8 rounded-[32px] shadow-2xl border border-slate-200/50">
+<!-- Browser-like header -->
+<div class="flex gap-1.5 mb-8 px-2">
+<div class="w-3 h-3 rounded-full bg-[#FF8A80]"></div>
+<div class="w-3 h-3 rounded-full bg-[#FFD180]"></div>
+<div class="w-3 h-3 rounded-full bg-[#B2DFDB]"></div>
+</div>
+<!-- Top Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<!-- This Month -->
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-left">
+<div class="text-slate-400 text-sm font-medium mb-3">This month</div>
+<div class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">₹18,240</div>
+<div class="text-sm font-bold text-rose-500">+12% vs last</div>
+</div>
+<!-- Budget Left -->
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-left">
+<div class="text-slate-400 text-sm font-medium mb-3">Budget left</div>
+<div class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">₹6,760</div>
+<div class="text-sm font-bold text-teal-500">43% remaining</div>
+</div>
+<!-- Transactions -->
+<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-left">
+<div class="text-slate-400 text-sm font-medium mb-3">Transactions</div>
+<div class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">34</div>
+<div class="text-sm font-medium text-slate-400">this month</div>
+</div>
+</div>
+<!-- Bottom Category Progress Bars -->
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+<!-- Food -->
+<div class="flex items-center gap-6">
+<div class="w-16 text-sm font-bold text-slate-500 text-left">Food</div>
+<div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-[#FB8C00] rounded-full" style="width: 70%;"></div>
+</div>
+</div>
+<!-- Travel -->
+<div class="flex items-center gap-6">
+<div class="w-16 text-sm font-bold text-slate-500 text-left">Travel</div>
+<div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-[#1E88E5] rounded-full" style="width: 50%;"></div>
+</div>
+</div>
+<!-- Bills -->
+<div class="flex items-center gap-6">
+<div class="w-16 text-sm font-bold text-slate-500 text-left">Bills</div>
+<div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-[#7E57C2] rounded-full" style="width: 40%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Expense Breakdown Section (Original Style Preserved) -->
+<section class="bg-surface-container-low py-24 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16 text-center max-w-2xl mx-auto">
+<h2 class="text-4xl font-headline font-extrabold tracking-tight mb-4">Master Your Categories</h2>
+<p class="text-on-surface-variant">Detailed visual breakdowns of where your money flows. No complex charts, just clear editorial insights.</p>
+</div>
+<div class="grid lg:grid-cols-2 gap-16 items-center">
+<div class="space-y-10">
+<div>
+<div class="flex justify-between items-end mb-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">restaurant</span>
+<span class="font-headline font-bold text-xl">Food</span>
+</div>
+<span class="font-bold text-on-surface">₹8,400 <span class="text-sm font-normal text-on-surface-variant">/ ₹10k</span></span>
+</div>
+<div class="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 84%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">flight</span>
+<span class="font-headline font-bold text-xl">Travel</span>
+</div>
+<span class="font-bold text-on-surface">₹4,200 <span class="text-sm font-normal text-on-surface-variant">/ ₹5k</span></span>
+</div>
+<div class="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 72%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error">receipt_long</span>
+<span class="font-headline font-bold text-xl">Bills</span>
+</div>
+<span class="font-bold text-error">₹5,640 <span class="text-sm font-normal text-on-surface-variant">/ ₹5k</span></span>
+</div>
+<div class="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+</div>
+<div class="relative group">
+<div class="absolute inset-0 bg-primary/10 rounded-3xl -rotate-2 group-hover:rotate-0 transition-transform"></div>
+<img alt="Modern minimalist aesthetic finance tracking" class="relative rounded-3xl shadow-2xl object-cover h-[500px] w-full border border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyrg9AbBHq06oggQ6Ldq1nawj4ipIE0ewNCdSBwjSZOoNcJQvRA6QUnN1i2nsbSHfaSgPQlsAD_BI9Cr56iCkKUGKUBxwHoUgUQg6l_y9Tqn1r35o12kFYzZVi6Vax1S8kdGgPrcdER61r8HfPVDGlJIGK9rxXP6HetxfnBMKjlmukGVmlL9gtfXRluG9UDhU_KmABFGtbEKo640pCMcO2f86ekerGVg45U_mpB-SeSsPiignrphs4Tibl3ooZFRp3gK6OVIrHjbNw"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid (Original Style Preserved) -->
+<section class="py-24 px-6 max-w-7xl mx-auto">
+<h2 class="text-center font-headline font-extrabold text-4xl mb-16">The Digital Ledger Advantage</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px]">
+<div class="md:col-span-2 bg-primary text-white p-8 rounded-xl flex flex-col justify-end relative overflow-hidden">
+<div class="absolute top-4 right-4 text-7xl opacity-20"><span class="material-symbols-outlined" style="font-size: 8rem;">security</span></div>
+<h3 class="text-2xl font-headline font-bold mb-2">Military Grade Security</h3>
+<p class="text-emerald-100 max-w-md">Your data is encrypted using AES-256 standards, ensuring your financial secrets stay yours.</p>
+</div>
+<div class="bg-slate-100 p-8 rounded-xl flex flex-col justify-between">
+<span class="material-symbols-outlined text-primary text-4xl">auto_awesome</span>
+<div>
+<h3 class="font-headline font-bold mb-1">Smart Sorting</h3>
+<p class="text-sm text-slate-500">AI-powered categorization for every single rupee spent.</p>
+</div>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container p-8 rounded-xl flex flex-col justify-between">
+<span class="material-symbols-outlined text-4xl">family_restroom</span>
+<div>
+<h3 class="font-headline font-bold mb-1">Shared Ledgers</h3>
+<p class="text-sm opacity-80">Track expenses with family or roommates in real-time.</p>
+</div>
+</div>
+<div class="md:col-span-2 bg-slate-200 p-8 rounded-xl flex items-center gap-8">
+<div class="hidden sm:block">
+<img alt="Digital graph" class="w-32 h-32 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbRb5f1xFCQHJEUnAqXEL2nLb933ZnP8O47oFKyEUDCrBDXOmWP59zKksL3hT77LAe3FStoiH4UVj92CG5DvO1Mhu-vloTqWuDCV6OuXKGA1opqJn2B-cgZzK75zwWNQVJgllDL7zbvO6D_zOUuusAskLCQ8jFITMWU3MbwAz4uqC_dNaTRhyvHWMQXaBu2ID6zQhvG-Lwkf3OFxsRS7a0NqLvVrXiKr6wE7dHpyWftBZAgeS_MmBgS0HA8Cp1A3D8MhDEL1TT2u09"/>
+</div>
+<div>
+<h3 class="text-xl font-headline font-bold mb-2">Editorial Insights</h3>
+<p class="text-slate-600">Weekly newsletters summarizing your habits like a high-end financial magazine.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-6 text-center">
+<div class="max-w-4xl mx-auto bg-primary p-12 md:p-20 rounded-[40px] shadow-2xl relative overflow-hidden">
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+<div class="relative z-10">
+<h2 class="text-4xl md:text-5xl font-headline font-extrabold text-white mb-6">Ready to balance the books?</h2>
+<p class="text-emerald-100 mb-10 text-lg max-w-xl mx-auto">Join 50,000+ users who have regained control over their financial story with Spendly.</p>
+<button class="bg-white text-primary px-10 py-4 rounded-xl font-headline font-bold text-xl active:scale-95 transition-all shadow-xl hover:bg-slate-50">
+                    Get Started for Free
+                </button>
+<p class="text-white/60 mt-6 text-sm font-medium">No credit card required. Cancel anytime.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-white w-full py-16 border-t border-slate-100">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 px-8">
+<div class="flex flex-col items-center md:items-start">
+<div class="text-lg font-headline font-extrabold text-primary mb-2">Spendly</div>
+<p class="text-slate-400 font-medium text-xs tracking-wide uppercase">© 2024 Spendly. The Digital Ledger.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-slate-400 font-medium text-xs tracking-wide uppercase hover:text-primary transition-all" href="#">Terms of Service</a>
+<a class="text-slate-400 font-medium text-xs tracking-wide uppercase hover:text-primary transition-all" href="#">Privacy Policy</a>
+<a class="text-slate-400 font-medium text-xs tracking-wide uppercase hover:text-primary transition-all" href="#">Security</a>
+<a class="text-slate-400 font-medium text-xs tracking-wide uppercase hover:text-primary transition-all" href="#">Contact Us</a>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400">language</span>
+<span class="material-symbols-outlined text-slate-400">share</span>
+</div>
+</div>
+</footer>
+</body></html>

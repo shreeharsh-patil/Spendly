@@ -2,95 +2,233 @@
 
 {% block title %}Spendly — Track Every Rupee{% endblock %}
 
+{% block head %}
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .text-highlight {
+        position: relative;
+        z-index: 1;
+    }
+    .text-highlight::after {
+        content: '';
+        position: absolute;
+        left: -4px;
+        right: -4px;
+        bottom: 4px;
+        height: 45%;
+        background-color: #D1E9F6;
+        z-index: -1;
+        opacity: 0.8;
+    }
+    /* Override base styles that might conflict */
+    .main-content { padding: 0 !important; }
+    .navbar { background: rgba(255, 255, 255, 0.8) !important; backdrop-filter: blur(12px); border-bottom: 1px solid #f1f5f9 !important; }
+</style>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#004D40",
+                    "on-surface": "#2c2f31",
+                    "on-surface-variant": "#595c5e",
+                },
+                fontFamily: {
+                    "headline": ["Manrope", "sans-serif"],
+                    "body": ["Manrope", "sans-serif"],
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}
+
 {% block content %}
-
-<section class="hero">
-    <div class="hero-inner">
-        <div class="hero-badge">Personal Finance Tracker</div>
-        <h1 class="hero-title">
-            Know where your<br>
-            <em>money goes</em>
-        </h1>
-        <p class="hero-subtitle">
-            Log expenses, understand your spending patterns,
-            and take control of your financial life —
-            one transaction at a time.
-        </p>
-        <div class="hero-actions">
-            {% if session.user_id %}
-                <a href="{{ url_for('dashboard') }}" class="btn-primary">Go to Dashboard</a>
-            {% else %}
-                <a href="{{ url_for('register') }}" class="btn-primary">Start tracking free</a>
-                <a href="{{ url_for('login') }}" class="btn-ghost">Sign in</a>
-            {% endif %}
-        </div>
-    </div>
-    <div class="hero-visual">
-        <div class="mock-card">
-            <div class="mock-card-header">
-                <span class="mock-label">March 2026</span>
-                <span class="mock-total">₹12,450</span>
+<main class="font-body antialiased">
+    <!-- Updated Hero Section from Stitch -->
+    <section class="relative pt-20 pb-24 px-6 bg-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-1.5 px-4 py-1.5 mb-12 rounded-full bg-[#E6F4F1] text-[#00695C] text-sm font-medium">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#00695C]"></span>
+                Free to use · No credit card needed
             </div>
-            <div class="mock-bars">
-                <div class="mock-bar-row">
-                    <span class="mock-cat">Bills</span>
-                    <div class="mock-bar-track">
-                        <div class="mock-bar" style="width: 72%"></div>
+            <h1 class="text-5xl md:text-[64px] font-headline font-extrabold text-on-surface leading-[1.1] tracking-tight mb-8">
+                <span class="text-highlight">Track every rupee.</span><br/>
+                <span class="text-highlight text-[#00796B]">Know where it goes.</span>
+            </h1>
+            <p class="text-xl text-slate-500 font-medium max-w-2xl mx-auto mb-12 leading-relaxed">
+                Spendly helps you log expenses, spot patterns, and stay on budget — without the spreadsheet headache.
+            </p>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-20">
+                {% if session.user_id %}
+                    <a href="{{ url_for('dashboard') }}" class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg">Go to Dashboard</a>
+                {% else %}
+                    <a href="{{ url_for('register') }}" class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg">Create free account</a>
+                    <a href="#" class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg flex items-center gap-2">
+                        How it works
+                        <span class="material-symbols-outlined text-xl text-white">play_circle</span>
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Dashboard Preview Mockup -->
+            <div class="relative max-w-5xl mx-auto">
+                <div class="bg-[#F8FAFC] p-4 md:p-8 rounded-[32px] shadow-2xl border border-slate-200/50">
+                    <div class="flex gap-1.5 mb-8 px-2">
+                        <div class="w-3 h-3 rounded-full bg-[#FF8A80]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#FFD180]"></div>
+                        <div class="w-3 h-3 rounded-full bg-[#B2DFDB]"></div>
                     </div>
-                    <span class="mock-amt">₹4,500</span>
-                </div>
-                <div class="mock-bar-row">
-                    <span class="mock-cat">Food</span>
-                    <div class="mock-bar-track">
-                        <div class="mock-bar mock-bar-2" style="width: 52%"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-left">
+                            <div class="text-slate-400 text-sm font-medium mb-3">This month</div>
+                            <div class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">₹18,240</div>
+                            <div class="text-sm font-bold text-rose-500">+12% vs last</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-left">
+                            <div class="text-slate-400 text-sm font-medium mb-3">Budget left</div>
+                            <div class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">₹6,760</div>
+                            <div class="text-sm font-bold text-teal-500">43% remaining</div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-left">
+                            <div class="text-slate-400 text-sm font-medium mb-3">Transactions</div>
+                            <div class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">34</div>
+                            <div class="text-sm font-medium text-slate-400">this month</div>
+                        </div>
                     </div>
-                    <span class="mock-amt">₹3,200</span>
-                </div>
-                <div class="mock-bar-row">
-                    <span class="mock-cat">Health</span>
-                    <div class="mock-bar-track">
-                        <div class="mock-bar mock-bar-3" style="width: 33%"></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-6">
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 text-sm font-bold text-slate-500 text-left">Food</div>
+                            <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-[#FB8C00] rounded-full" style="width: 70%;"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 text-sm font-bold text-slate-500 text-left">Travel</div>
+                            <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-[#1E88E5] rounded-full" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 text-sm font-bold text-slate-500 text-left">Bills</div>
+                            <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-[#7E57C2] rounded-full" style="width: 40%;"></div>
+                            </div>
+                        </div>
                     </div>
-                    <span class="mock-amt">₹2,050</span>
-                </div>
-                <div class="mock-bar-row">
-                    <span class="mock-cat">Transport</span>
-                    <div class="mock-bar-track">
-                        <div class="mock-bar mock-bar-4" style="width: 28%"></div>
-                    </div>
-                    <span class="mock-amt">₹1,800</span>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="features">
-    <div class="features-inner">
-        <div class="feature-card">
-            <div class="feature-icon">₹</div>
-            <h3 class="feature-title">Log expenses instantly</h3>
-            <p class="feature-body">Add any expense in seconds. Category, amount, date, description — all in one simple form.</p>
+    <!-- Expense Breakdown Section -->
+    <section class="bg-slate-50 py-24 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 text-center max-w-2xl mx-auto">
+                <h2 class="text-4xl font-headline font-extrabold tracking-tight mb-4">Master Your Categories</h2>
+                <p class="text-slate-600">Detailed visual breakdowns of where your money flows. No complex charts, just clear editorial insights.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-10">
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">restaurant</span>
+                                <span class="font-headline font-bold text-xl">Food</span>
+                            </div>
+                            <span class="font-bold text-slate-900">₹8,400 <span class="text-sm font-normal text-slate-500">/ ₹10k</span></span>
+                        </div>
+                        <div class="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-primary rounded-full" style="width: 84%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">flight</span>
+                                <span class="font-headline font-bold text-xl">Travel</span>
+                            </div>
+                            <span class="font-bold text-slate-900">₹4,200 <span class="text-sm font-normal text-slate-500">/ ₹5k</span></span>
+                        </div>
+                        <div class="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-primary rounded-full" style="width: 72%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-rose-600">receipt_long</span>
+                                <span class="font-headline font-bold text-xl">Bills</span>
+                            </div>
+                            <span class="font-bold text-rose-600">₹5,640 <span class="text-sm font-normal text-slate-500">/ ₹5k</span></span>
+                        </div>
+                        <div class="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-rose-600 rounded-full" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative group">
+                    <div class="absolute inset-0 bg-primary/10 rounded-3xl -rotate-2 group-hover:rotate-0 transition-transform"></div>
+                    <img alt="Modern minimalist aesthetic finance tracking" class="relative rounded-3xl shadow-2xl object-cover h-[500px] w-full border border-white/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDyrg9AbBHq06oggQ6Ldq1nawj4ipIE0ewNCdSBwjSZOoNcJQvRA6QUnN1i2nsbSHfaSgPQlsAD_BI9Cr56iCkKUGKUBxwHoUgUQg6l_y9Tqn1r35o12kFYzZVi6Vax1S8kdGgPrcdER61r8HfPVDGlJIGK9rxXP6HetxfnBMKjlmukGVmlL9gtfXRluG9UDhU_KmABFGtbEKo640pCMcO2f86ekerGVg45U_mpB-SeSsPiignrphs4Tibl3ooZFRp3gK6OVIrHjbNw"/>
+                </div>
+            </div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">◎</div>
-            <h3 class="feature-title">Understand your patterns</h3>
-            <p class="feature-body">See exactly where your money goes with category breakdowns and monthly summaries.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">◷</div>
-            <h3 class="feature-title">Filter by time period</h3>
-            <p class="feature-body">View your spending for any date range — last week, last month, or a custom period.</p>
-        </div>
-    </div>
-</section>
+    </section>
 
-<section class="cta-section">
-    <div class="cta-inner">
-        <h2 class="cta-title">Ready to take control?</h2>
-        <p class="cta-body">Join thousands of people who track their expenses with Spendly.</p>
-        <a href="{{ url_for('register') }}" class="btn-primary">Create free account</a>
-    </div>
-</section>
+    <!-- Bento Grid -->
+    <section class="py-24 px-6 max-w-7xl mx-auto">
+        <h2 class="text-center font-headline font-extrabold text-4xl mb-16">The Digital Ledger Advantage</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[250px]">
+            <div class="md:col-span-2 bg-primary text-white p-8 rounded-xl flex flex-col justify-end relative overflow-hidden">
+                <div class="absolute top-4 right-4 text-7xl opacity-20"><span class="material-symbols-outlined" style="font-size: 8rem;">security</span></div>
+                <h3 class="text-2xl font-headline font-bold mb-2">Military Grade Security</h3>
+                <p class="text-emerald-100 max-w-md">Your data is encrypted using AES-256 standards, ensuring your financial secrets stay yours.</p>
+            </div>
+            <div class="bg-slate-100 p-8 rounded-xl flex flex-col justify-between">
+                <span class="material-symbols-outlined text-primary text-4xl">auto_awesome</span>
+                <div>
+                    <h3 class="font-headline font-bold mb-1">Smart Sorting</h3>
+                    <p class="text-sm text-slate-500">AI-powered categorization for every single rupee spent.</p>
+                </div>
+            </div>
+            <div class="bg-indigo-100 text-indigo-900 p-8 rounded-xl flex flex-col justify-between">
+                <span class="material-symbols-outlined text-4xl">family_restroom</span>
+                <div>
+                    <h3 class="font-headline font-bold mb-1">Shared Ledgers</h3>
+                    <p class="text-sm opacity-80">Track expenses with family or roommates in real-time.</p>
+                </div>
+            </div>
+            <div class="md:col-span-2 bg-slate-200 p-8 rounded-xl flex items-center gap-8">
+                <div class="hidden sm:block">
+                    <img alt="Digital graph" class="w-32 h-32 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbRb5f1xFCQHJEUnAqXEL2nLb933ZnP8O47oFKyEUDCrBDXOmWP59zKksL3hT77LAe3FStoiH4UVj92CG5DvO1Mhu-vloTqWuDCV6OuXKGA1opqJn2B-cgZzK75zwWNQVJgllDL7zbvO6D_zOUuusAskLCQ8jFITMWU3MbwAz4uqC_dNaTRhyvHWMQXaBu2ID6zQhvG-Lwkf3OFxsRS7a0NqLvVrXiKr6wE7dHpyWftBZAgeS_MmBgS0HA8Cp1A3D8MhDEL1TT2u09"/>
+                </div>
+                <div>
+                    <h3 class="text-xl font-headline font-bold mb-2">Editorial Insights</h3>
+                    <p class="text-slate-600">Weekly newsletters summarizing your habits like a high-end financial magazine.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- CTA Section -->
+    <section class="py-24 px-6 text-center">
+        <div class="max-w-4xl mx-auto bg-primary p-12 md:p-20 rounded-[40px] shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+            <div class="relative z-10">
+                <h2 class="text-4xl md:text-5xl font-headline font-extrabold text-white mb-6">Ready to balance the books?</h2>
+                <p class="text-emerald-100 mb-10 text-lg max-w-xl mx-auto">Join 50,000+ users who have regained control over their financial story with Spendly.</p>
+                <a href="{{ url_for('register') }}" class="inline-block bg-white text-primary px-10 py-4 rounded-xl font-headline font-bold text-xl active:scale-95 transition-all shadow-xl hover:bg-slate-50">
+                    Get Started for Free
+                </a>
+                <p class="text-white/60 mt-6 text-sm font-medium">No credit card required. Cancel anytime.</p>
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}
