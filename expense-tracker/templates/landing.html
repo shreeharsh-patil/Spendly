@@ -70,8 +70,8 @@
                     <a href="{{ url_for('dashboard') }}" class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg">Go to Dashboard</a>
                 {% else %}
                     <a href="{{ url_for('register') }}" class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg">Create free account</a>
-                    <a href="#" class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg flex items-center gap-2">
-                        How it works
+                    <a href="#" id="how-it-works-btn" class="bg-black text-white px-10 py-4 rounded-xl font-bold text-lg active:scale-95 transition-all shadow-lg flex items-center gap-2">
+                        See how it works
                         <span class="material-symbols-outlined text-xl text-white">play_circle</span>
                     </a>
                 {% endif %}
@@ -230,5 +230,63 @@
             </div>
         </div>
     </section>
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="relative w-full max-w-4xl bg-black rounded-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300">
+            <button id="closeModal" class="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="aspect-video w-full">
+                <iframe id="youtube-video" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('videoModal');
+            const closeBtn = document.getElementById('closeModal');
+            const videoFrame = document.getElementById('youtube-video');
+            const openBtn = document.getElementById('how-it-works-btn');
+            const videoSrc = "https://www.youtube.com/embed/dQw4w9WgXcQ"; // Rickroll placeholder
+
+            if (!openBtn) return;
+
+            openBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                videoFrame.src = videoSrc + "?autoplay=1";
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    modal.querySelector('.relative').classList.remove('scale-95');
+                    modal.querySelector('.relative').classList.add('scale-100');
+                }, 10);
+            });
+
+            const closeModalFunc = () => {
+                modal.classList.remove('opacity-100');
+                modal.querySelector('.relative').classList.add('scale-95');
+                modal.querySelector('.relative').classList.remove('scale-100');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    videoFrame.src = ""; // Stop video by clearing src
+                }, 300);
+            };
+
+            closeBtn.addEventListener('click', closeModalFunc);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModalFunc();
+            });
+            
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModalFunc();
+                }
+            });
+        });
+    </script>
 </main>
 {% endblock %}
