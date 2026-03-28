@@ -21,9 +21,12 @@ def init_db():
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password_hash TEXT NOT NULL,
-            monthly_budget REAL DEFAULT 10000.0
+            monthly_budget REAL DEFAULT 10000.0,
+            phone TEXT,
+            avatar_url TEXT
         )
     """)
+
     
     # Create Expenses Table
     db.execute("""

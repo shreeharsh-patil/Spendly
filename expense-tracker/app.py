@@ -219,11 +219,42 @@ def delete_expense(id):
     flash("Expense deleted.", "info")
     return redirect(url_for("dashboard"))
 
-@app.route("/profile")
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
     if 'user_id' not in session:
         return redirect(url_for("login"))
-    return render_template("profile.html")
+    
+    db = get_db()
+    
+    if request.method == "POST":
+        new_name = request.form.get("name")
+        new_email = request.form.get("email")
+        new_phone = request.form.get("phone")
+        new_avatar_url = request.form.get("avatar_url")
+        
+        if new_name and new_email:
+            try:
+                db.execute(
+                    "UPDATE users SET name = ?, email = ?, phone = ?, avatar_url = ? WHERE id = ?",
+                    (new_name, new_email, new_phone, new_avatar_url, session['user_id'])
+                )
+                db.commit()
+                
+                # Update session data
+                session['user_name'] = new_name
+                flash("Profile updated successfully!", "success")
+            except db.IntegrityError:
+                flash("Email address already in use.", "danger")
+        else:
+            flash("Name and email are required.", "warning")
+        
+        return redirect(url_for("profile"))
+
+    # GET: Load current user details
+    user = db.execute("SELECT * FROM users WHERE id = ?", (session['user_id'],)).fetchone()
+    return render_template("profile.html", user=user)
+
+
 
 
 if __name__ == "__main__":

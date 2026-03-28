@@ -2,25 +2,285 @@
 
 {% block title %}Profile | Spendly{% endblock %}
 
-{% block content %}
-<section class="profile-section">
-    <div class="profile-container">
-        <div class="profile-header">
-            <h1>Your Profile</h1>
-            <p>Personal details and account overview.</p>
-        </div>
-
-        <div class="profile-card">
-            <div class="detail-row">
-                <span class="label">Full Name</span>
-                <span class="value">{{ session.user_name }}</span>
-            </div>
-            <!-- Additional features could be added here (e.g. changing password or email) -->
-        </div>
-
-        <div class="profile-actions">
-            <a href="{{ url_for('logout') }}" class="btn-logout">Sign out</a>
-        </div>
-    </div>
-</section>
+{% block head %}
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+    }
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .headline { font-family: 'Manrope', sans-serif; }
+    /* Override base styles to allow Tailwind to shine */
+    .navbar, .footer { font-family: 'Inter', sans-serif; }
+    .main-content { padding: 0 !important; }
+</style>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-container": "#c8d8f3",
+            "surface-container": "#e5e9eb",
+            "on-error-container": "#570008",
+            "secondary-fixed-dim": "#bacae4",
+            "on-tertiary-container": "#490081",
+            "on-secondary-fixed-variant": "#46556b",
+            "surface-tint": "#266658",
+            "tertiary-dim": "#6b30a4",
+            "secondary-dim": "#415166",
+            "surface": "#f5f7f9",
+            "secondary": "#4d5d73",
+            "tertiary-container": "#cd9bff",
+            "inverse-primary": "#bdfeeb",
+            "secondary-fixed": "#c8d8f3",
+            "primary-container": "#aaead8",
+            "tertiary-fixed-dim": "#c488ff",
+            "on-secondary": "#edf3ff",
+            "primary-fixed-dim": "#9cdbca",
+            "surface-container-highest": "#d9dde0",
+            "on-primary-container": "#14584b",
+            "on-error": "#ffefee",
+            "on-primary": "#c3ffed",
+            "primary-fixed": "#aaead8",
+            "on-tertiary": "#fbefff",
+            "on-secondary-fixed": "#29394e",
+            "error-container": "#fb5151",
+            "on-secondary-container": "#3c4c61",
+            "error": "#b31b25",
+            "outline-variant": "#abadaf",
+            "inverse-surface": "#0b0f10",
+            "surface-container-high": "#dfe3e6",
+            "on-surface-variant": "#595c5e",
+            "on-background": "#2c2f31",
+            "surface-container-low": "#eef1f3",
+            "on-primary-fixed-variant": "#216254",
+            "on-surface": "#2c2f31",
+            "tertiary": "#783db1",
+            "on-tertiary-fixed": "#270048",
+            "background": "#f5f7f9",
+            "surface-bright": "#f5f7f9",
+            "primary-dim": "#16594c",
+            "primary": "#266658",
+            "inverse-on-surface": "#9a9d9f",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed-variant": "#53108c",
+            "surface-dim": "#d0d5d8",
+            "error-dim": "#9f0519",
+            "surface-variant": "#d9dde0",
+            "outline": "#747779",
+            "tertiary-fixed": "#cd9bff",
+            "on-primary-fixed": "#004439"
+          },
+          fontFamily: {
+            "headline": ["Manrope"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+</script>
 {% endblock %}
+
+{% block content %}
+<div class="bg-surface text-on-surface antialiased min-h-screen pb-32">
+    <main class="max-w-7xl mx-auto px-6 pt-12">
+        <!-- User Overview & Layout Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <!-- Sidebar Navigation/Status (Left Column) -->
+            <div class="lg:col-span-4 space-y-8">
+                <!-- User Profile Hero Card -->
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(44,47,49,0.06)] flex flex-col items-center text-center">
+                    <div class="relative mb-6">
+                        <div class="p-1 rounded-full bg-gradient-to-tr from-primary to-primary-container">
+                            <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-lowest">
+                                <img alt="{{ user['name'] }}" src="{{ user['avatar_url'] if user['avatar_url'] else 'https://lh3.googleusercontent.com/aida-public/AB6AXuCtglumBgjwU-w8fHbikQXqtDB6U25ruybXX3gcnM1eZQCzP8miwGrFTB88WOiCS0O3sI318Pj1ZNbwEFrpaMeia9yRJIQCdIeSTmc3XOcBQSD_10Gwr2NwLTnoHknNSQxU7pVovGO5Gs6yx1Sdewcr2QVUAlFD8wBj2I5GeemXQ-5KoBLicxhYHMPyAp8LVv3Bsd8_UE0wUQ27ByFtIsxV0Hm0VQIQWONDU17lD5C5nLN4HuHKWzM_HjaXCgBcs7ctr-xC7VEODPWD' }}"/>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-1 right-1 bg-primary text-on-primary p-1.5 rounded-full border-2 border-surface-container-lowest">
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-extrabold tracking-tight text-on-surface mb-1">{{ user['name'] }}</h2>
+                    <p class="text-primary font-semibold tracking-wide text-sm bg-primary-container px-3 py-1 rounded-full">PREMIUM LEDGER</p>
+                    <div class="w-full mt-10 grid grid-cols-2 gap-4">
+                        <div class="bg-surface-container-low p-4 rounded-lg text-left">
+                            <p class="text-on-surface-variant text-xs font-medium uppercase tracking-widest mb-1">Member Since</p>
+                            <p class="text-on-surface font-bold">Jan 2023</p>
+                        </div>
+                        <div class="bg-surface-container-low p-4 rounded-lg text-left">
+                            <p class="text-on-surface-variant text-xs font-medium uppercase tracking-widest mb-1">Tier</p>
+                            <p class="text-on-surface font-bold">Elite</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Financial Insights Summary Card -->
+                <div class="bg-primary text-on-primary p-8 rounded-xl shadow-lg relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-on-primary/80 font-medium text-sm tracking-wide uppercase mb-4">Digital Ledger Score</h3>
+                        <div class="flex items-end gap-2 mb-6">
+                            <span class="text-5xl font-extrabold tracking-tighter">842</span>
+                            <span class="text-on-primary/70 text-sm mb-1 font-medium">/ 1000</span>
+                        </div>
+                        <div class="w-full bg-white/20 h-2 rounded-full mb-4">
+                            <div class="bg-on-primary h-full rounded-full" style="width: 84.2%"></div>
+                        </div>
+                        <p class="text-sm font-medium leading-relaxed text-on-primary/90">Your financial health is in the top 5% of Spendly users this month.</p>
+                    </div>
+                    <!-- Decorative background element -->
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                </div>
+                <!-- Subscription Management -->
+                <div class="bg-surface-container p-6 rounded-xl space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-on-surface-variant text-sm uppercase tracking-widest">Subscription</h3>
+                        <span class="text-xs font-bold text-primary">MANAGE</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-surface-container-lowest rounded-lg flex items-center justify-center text-primary shadow-sm">
+                            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">diamond</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-on-surface">Premium Plan</p>
+                            <p class="text-on-surface-variant text-xs">$14.99 / billed monthly</p>
+                        </div>
+                    </div>
+                    <button class="w-full py-3 bg-primary text-on-primary font-bold rounded-lg text-sm transition-transform active:scale-95">
+                        Upgrade to Enterprise
+                    </button>
+                </div>
+            </div>
+            <!-- Main Content Area (Right Column) -->
+            <div class="lg:col-span-8 space-y-12">
+                <!-- Account Settings Section -->
+                <section>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="material-symbols-outlined text-primary">person_outline</span>
+                        <h3 class="text-xl font-bold tracking-tight">Account Settings</h3>
+                    </div>
+                    <form method="POST" class="bg-surface-container-lowest rounded-xl p-8 space-y-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Full Name</label>
+                                <input name="name" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface font-medium" type="text" value="{{ user['name'] }}"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Email Address</label>
+                                <input name="email" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface font-medium" type="email" value="{{ user['email'] }}"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Phone Number</label>
+                                <input name="phone" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface font-medium" type="tel" value="{{ user['phone'] if user['phone'] else '' }}" placeholder="Enter phone number"/>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Avatar URL</label>
+                                <input name="avatar_url" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface font-medium" type="url" value="{{ user['avatar_url'] if user['avatar_url'] else '' }}" placeholder="Enter image URL"/>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-surface-container-high flex justify-end">
+                            <button type="submit" class="px-8 py-3 bg-primary text-on-primary rounded-lg font-bold shadow-md shadow-primary/20 hover:bg-emerald-700 transition-colors">
+                                Save Profile Changes
+                            </button>
+                        </div>
+                    </form>
+                </section>
+                <!-- Linked Accounts Section (Bento Style) -->
+                <section>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">account_balance</span>
+                            <h3 class="text-xl font-bold tracking-tight">Linked Accounts</h3>
+                        </div>
+                        <button class="text-primary font-bold text-sm flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">add_circle</span> Link New
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Card 1 -->
+                        <div class="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between group cursor-pointer hover:bg-primary/5 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center group-hover:bg-primary-container transition-colors">
+                                    <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">credit_card</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-on-surface">HDFC Regalia</p>
+                                    <p class="text-on-surface-variant text-xs">Visa •••• 4242</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="bg-surface-container-lowest p-6 rounded-xl flex items-center justify-between group cursor-pointer hover:bg-primary/5 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-surface-container-high rounded-full flex items-center justify-center group-hover:bg-primary-container transition-colors">
+                                    <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">account_balance</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-on-surface">ICICI Savings</p>
+                                    <p class="text-on-surface-variant text-xs">Savings •••• 9801</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+                        </div>
+                    </div>
+                </section>
+                <!-- Security & Privacy Section -->
+                <section>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="material-symbols-outlined text-primary">security</span>
+                        <h3 class="text-xl font-bold tracking-tight">Security &amp; Privacy</h3>
+                    </div>
+                    <div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+                        <div class="divide-y divide-surface-container-low">
+                            <div class="p-6 flex items-center justify-between hover:bg-surface-container-low/50 transition-colors cursor-pointer">
+                                <div class="flex items-center gap-4">
+                                    <span class="material-symbols-outlined text-on-surface-variant">lock</span>
+                                    <div>
+                                        <p class="font-bold text-on-surface">Change Password</p>
+                                        <p class="text-on-surface-variant text-sm">Update your security credentials</p>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+                            </div>
+                            <div class="p-6 flex items-center justify-between hover:bg-surface-container-low/50 transition-colors cursor-pointer">
+                                <div class="flex items-center gap-4">
+                                    <span class="material-symbols-outlined text-on-surface-variant">vibration</span>
+                                    <div>
+                                        <p class="font-bold text-on-surface">Two-Factor Authentication</p>
+                                        <p class="text-on-surface-variant text-sm">Enhanced protection for your ledger</p>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-6 bg-primary rounded-full relative">
+                                    <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="p-6 flex items-center justify-between hover:bg-surface-container-low/50 transition-colors cursor-pointer">
+                                <div class="flex items-center gap-4">
+                                    <span class="material-symbols-outlined text-on-surface-variant">shield</span>
+                                    <div>
+                                        <p class="font-bold text-on-surface">Privacy Preferences</p>
+                                        <p class="text-on-surface-variant text-sm">Control what data you share</p>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
