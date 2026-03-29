@@ -1,5 +1,6 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g, send_from_directory
+from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db, init_db
 
@@ -58,6 +59,16 @@ def register():
             flash("Email already exists.", "danger")
             
     return render_template("register.html")
+
+app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, 'uploads', 'profile_pics')
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -230,8 +241,20 @@ def profile():
         new_name = request.form.get("name")
         new_email = request.form.get("email")
         new_phone = request.form.get("phone")
-        new_avatar_url = request.form.get("avatar_url")
         
+        # Start with current avatar URL
+        current_data = db.execute("SELECT avatar_url FROM users WHERE id = ?", (session['user_id'],)).fetchone()
+        new_avatar_url = current_data['avatar_url'] if current_data else None
+        
+        # Overwrite only if a file is actually uploaded
+        if 'profile_photo' in request.files:
+            file = request.files['profile_photo']
+            if file and file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(f"user_{session['user_id']}_{file.filename}")
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+                new_avatar_url = url_for('static', filename=f'uploads/profile_pics/{filename}')
+
         if new_name and new_email:
             try:
                 db.execute(

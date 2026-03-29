@@ -102,12 +102,15 @@
             <div class="lg:col-span-4 space-y-8">
                 <!-- User Profile Hero Card -->
                 <div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_12px_32px_rgba(44,47,49,0.06)] flex flex-col items-center text-center">
-                    <div class="relative mb-6">
+                    <div class="relative mb-6 group">
                         <div class="p-1 rounded-full bg-gradient-to-tr from-primary to-primary-container">
                             <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-lowest">
-                                <img alt="{{ user['name'] }}" src="{{ user['avatar_url'] if user['avatar_url'] else 'https://lh3.googleusercontent.com/aida-public/AB6AXuCtglumBgjwU-w8fHbikQXqtDB6U25ruybXX3gcnM1eZQCzP8miwGrFTB88WOiCS0O3sI318Pj1ZNbwEFrpaMeia9yRJIQCdIeSTmc3XOcBQSD_10Gwr2NwLTnoHknNSQxU7pVovGO5Gs6yx1Sdewcr2QVUAlFD8wBj2I5GeemXQ-5KoBLicxhYHMPyAp8LVv3Bsd8_UE0wUQ27ByFtIsxV0Hm0VQIQWONDU17lD5C5nLN4HuHKWzM_HjaXCgBcs7ctr-xC7VEODPWD' }}"/>
+                                <img id="profile-preview" alt="{{ user['name'] }}" src="{{ user['avatar_url'] if user['avatar_url'] else 'https://lh3.googleusercontent.com/aida-public/AB6AXuCtglumBgjwU-w8fHbikQXqtDB6U25ruybXX3gcnM1eZQCzP8miwGrFTB88WOiCS0O3sI318Pj1ZNbwEFrpaMeia9yRJIQCdIeSTmc3XOcBQSD_10Gwr2NwLTnoHknNSQxU7pVovGO5Gs6yx1Sdewcr2QVUAlFD8wBj2I5GeemXQ-5KoBLicxhYHMPyAp8LVv3Bsd8_UE0wUQ27ByFtIsxV0Hm0VQIQWONDU17lD5C5nLN4HuHKWzM_HjaXCgBcs7ctr-xC7VEODPWD' }}"/>
                             </div>
                         </div>
+                        <label for="profile_photo" class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                            <span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+                        </label>
                         <div class="absolute bottom-1 right-1 bg-primary text-on-primary p-1.5 rounded-full border-2 border-surface-container-lowest">
                             <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
                         </div>
@@ -169,7 +172,9 @@
                         <span class="material-symbols-outlined text-primary">person_outline</span>
                         <h3 class="text-xl font-bold tracking-tight">Account Settings</h3>
                     </div>
-                    <form method="POST" class="bg-surface-container-lowest rounded-xl p-8 space-y-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+                    <form method="POST" enctype="multipart/form-data" class="bg-surface-container-lowest rounded-xl p-8 space-y-8 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
+                        <!-- Hidden File Input -->
+                        <input id="profile_photo" name="profile_photo" type="file" class="hidden" accept="image/*" onchange="previewImage(this)"/>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div class="space-y-2">
                                 <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Full Name</label>
@@ -184,8 +189,13 @@
                                 <input name="phone" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface font-medium" type="tel" value="{{ user['phone'] if user['phone'] else '' }}" placeholder="Enter phone number"/>
                             </div>
                             <div class="space-y-2">
-                                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Avatar URL</label>
-                                <input name="avatar_url" class="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary text-on-surface font-medium" type="url" value="{{ user['avatar_url'] if user['avatar_url'] else '' }}" placeholder="Enter image URL"/>
+                                <label class="text-xs font-bold text-on-surface-variant uppercase tracking-widest ml-1">Profile Photo</label>
+                                <div class="flex items-center gap-4 bg-surface-container-high rounded-lg px-4 py-2 border border-dashed border-outline-variant">
+                                    <button type="button" onclick="document.getElementById('profile_photo').click()" class="bg-primary text-on-primary text-xs font-bold px-4 py-2 rounded-md hover:bg-primary-dim transition-colors">
+                                        Choose File
+                                    </button>
+                                    <span id="file-name" class="text-on-surface-variant text-sm truncate">No file chosen</span>
+                                </div>
                             </div>
                         </div>
                         <div class="pt-4 border-t border-surface-container-high flex justify-end">
@@ -282,5 +292,22 @@
         </div>
     </main>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const fileName = input.files[0].name;
+            document.getElementById('file-name').textContent = fileName;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 {% endblock %}
 

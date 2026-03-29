@@ -18,37 +18,40 @@
     </div>
 </section>
 
-<section class="dashboard-grid">
-    <!-- Spending Breakdown Chart -->
-    <div class="grid-card chart-card">
-        <div class="card-header">
-            <h3>Spending by Category</h3>
+<section class="dashboard-grid" style="grid-template-columns: 1fr; gap: 3rem;">
+    <!-- Overall Spending Pie Chart (Full Width) -->
+    <div class="grid-card chart-card" style="min-height: 500px; padding: 2.5rem;">
+        <div class="card-header" style="justify-content: center; margin-bottom: 2rem;">
+            <h3 style="font-size: 1.5rem; color: var(--ink); font-family: var(--font-display);">Overall Spending by Category</h3>
         </div>
-        <div class="chart-container">
+        <div class="chart-container" style="height: 400px;">
             <canvas id="categoryChart"></canvas>
         </div>
     </div>
+</section>
+
+<section class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem;">
 
     <!-- Monthly Budget Status -->
     <div class="grid-card budget-card">
         <div class="card-header">
-            <h3>Monthly Budget Status</h3>
+            <h3>Budget Allocation</h3>
             <button class="edit-budget-btn" onclick="document.getElementById('budgetModal').style.display='flex'">Adjust</button>
         </div>
-        <div class="budget-status">
-            <div class="progress-details">
-                <span class="spent">₹{{ "%.2f"|format(current_month_spent) }} spent</span>
-                <span class="limit">of ₹{{ "%.2f"|format(monthly_budget) }}</span>
+        <div class="chart-container" style="height: 250px; position: relative;">
+            <canvas id="budgetOverviewChart"></canvas>
+            <div id="remaining-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none;">
+                <span style="display: block; font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase; font-weight: 600;">Remaining</span>
+                <span style="font-size: 1.25rem; font-weight: 800; color: var(--accent);">₹{{ "%.0f"|format(monthly_budget - current_month_spent) if monthly_budget > current_month_spent else 0 }}</span>
             </div>
-            <div class="progress-bar-track">
-                {% set percent = (current_month_spent / monthly_budget * 100) if monthly_budget > 0 else 0 %}
-                <div class="progress-bar-fill {% if percent > 90 %}danger{% elif percent > 75 %}warning{% endif %}" style="width: {{ [percent, 100]|min }}%"></div>
-            </div>
+        </div>
+        <div class="budget-status" style="margin-top: 1rem;">
             <p class="budget-caption">
+                {% set percent = (current_month_spent / monthly_budget * 100) if monthly_budget > 0 else 0 %}
                 {% if percent >= 100 %}
-                    <span class="danger-text">You've exceeded your budget!</span>
+                    <span class="danger-text">⚠️ Budget exceeded!</span>
                 {% elif percent > 80 %}
-                    <span class="warning-text">You're getting close to your limit.</span>
+                    <span class="warning-text">⚠️ Near limit ({{ percent|round|int }}%)</span>
                 {% else %}
                     You've used <strong>{{ percent|round|int }}%</strong> of your budget.
                 {% endif %}
@@ -135,29 +138,104 @@
 
 {% block scripts %}
 <script>
+    const rawLabels = {{ chart_labels|safe }};
+    const rawValues = {{ chart_values|safe }};
+    const totalSpentValue = {{ total_spent }};
+    
+    // Group small categories (< 5%) into "Others" for a "merged" feel
+    let processedLabels = [];
+    let processedValues = [];
+    let othersTotal = 0;
+    
+    for (let i = 0; i < rawLabels.length; i++) {
+        if (rawValues[i] / totalSpentValue < 0.05 && rawLabels.length > 5) {
+            othersTotal += rawValues[i];
+        } else {
+            processedLabels.push(rawLabels[i]);
+            processedValues.push(rawValues[i]);
+        }
+    }
+    
+    if (othersTotal > 0) {
+        processedLabels.push("Others");
+        processedValues.push(othersTotal);
+    }
+
     const ctx = document.getElementById('categoryChart').getContext('2d');
-    const categoryChart = new Chart(ctx, {
-        type: 'doughnut',
+    new Chart(ctx, {
+        type: 'pie',
         data: {
-            labels: {{ chart_labels|safe }},
+            labels: processedLabels,
             datasets: [{
-                data: {{ chart_values|safe }},
+                data: processedValues,
                 backgroundColor: [
-                    '#fee2e2', '#e0f2fe', '#fef3c7', '#ede9fe', '#fae8ff', '#f3f4f6'
+                    '#06b6d4', '#6366f1', '#f43f5e', '#f59e0b', '#10b981', '#a855f7', '#f97316', '#3b82f6'
                 ],
-                borderColor: [
-                    '#991b1b', '#075985', '#92400e', '#5b21b6', '#86198f', '#374151'
-                ],
-                borderWidth: 1
+                borderWidth: 0,
+                hoverOffset: 30
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: { padding: 40 },
             plugins: {
-                legend: { position: 'bottom' }
-            },
-            cutout: '70%'
+                legend: { 
+                    position: 'bottom',
+                    labels: { 
+                        font: { family: 'Inter', size: 14, weight: '500' }, 
+                        padding: 30,
+                        usePointStyle: true 
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 15, 15, 0.95)',
+                    padding: 12,
+                    bodyFont: { family: 'Inter', size: 13 },
+                    callbacks: {
+                        label: function(context) {
+                            const val = context.raw || 0;
+                            const pct = ((val / totalSpentValue) * 100).toFixed(1);
+                            return ` ₹${val.toLocaleString()} (${pct}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Budget Overview Chart (Spent vs Remaining)
+    const budgetCtx = document.getElementById('budgetOverviewChart').getContext('2d');
+    const spent = {{ current_month_spent }};
+    const budget = {{ monthly_budget }};
+    const remaining = Math.max(0, budget - spent);
+    
+    new Chart(budgetCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Spent', 'Remaining'],
+            datasets: [{
+                data: [spent, remaining],
+                backgroundColor: [spent > budget ? '#b31b25' : '#266658', '#e5e9eb'],
+                borderWidth: 0,
+                weight: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '80%',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const val = context.raw || 0;
+                            return ` ₹${val.toLocaleString()}`;
+                        }
+                    }
+                }
+            }
         }
     });
 </script>
